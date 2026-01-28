@@ -1,0 +1,3 @@
+@echo off
+echo Building syncthing with systray support...
+"C:\Program Files\Go\bin\go.exe" run build.go build syncthing

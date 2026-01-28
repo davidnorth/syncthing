@@ -604,6 +604,11 @@ func (c *serveCmd) syncthingMain() {
 		go func() { _ = openURL(cfgWrapper.GUI().URL()) }()
 	}
 
+	// Initialize system tray on Windows
+	if shouldRunSystray() {
+		go initSystray(app, cfgWrapper)
+	}
+
 	status := app.Wait()
 
 	if status == svcutil.ExitError {

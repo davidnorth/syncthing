@@ -906,10 +906,25 @@ func ldflags(tags []string) string {
 	fmt.Fprintf(b, " -X github.com/syncthing/syncthing/lib/build.User=%s", buildUser())
 	fmt.Fprintf(b, " -X github.com/syncthing/syncthing/lib/build.Host=%s", buildHost())
 	fmt.Fprintf(b, " -X github.com/syncthing/syncthing/lib/build.Tags=%s", strings.Join(tags, ","))
+	
+	// On Windows, build as a GUI application (no console window) unless "console" tag is specified
+	if goos == "windows" && !sliceContains(tags, "console") {
+		b.WriteString(" -H windowsgui")
+	}
+	
 	if v := os.Getenv("EXTRA_LDFLAGS"); v != "" {
 		fmt.Fprintf(b, " %s", v)
 	}
 	return b.String()
+}
+
+func sliceContains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }
 
 func rmr(paths ...string) {
